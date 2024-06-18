@@ -141,16 +141,16 @@ func TestMain(t *testing.T) {
 		return
 	}
 
-	if err := os.Remove(MOCK_JSON_FILE); err != nil {
-		t.Error("could not remove MOCK_JSON_FILE")
-		return
-	}
-
 	os.Args = []string{"", MOCK_JSON_FILE}
 	main()
 
 	if err := os.Remove(FILE_NAME); err != nil {
 		t.Error("could not remove FILE_NAME")
+		return
+	}
+
+	if err := os.Remove(MOCK_JSON_FILE); err != nil {
+		t.Error("could not remove MOCK_JSON_FILE")
 		return
 	}
 }

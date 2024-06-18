@@ -67,7 +67,10 @@ func TestReadJsonFile(t *testing.T) {
 		t.Errorf("expected nil, but got %e", err)
 	}
 
-	os.Remove(MOCK_JSON_FILE)
+	if err := os.Remove(MOCK_JSON_FILE); err != nil {
+		t.Error("could not remove MOCK_JSON_FILE")
+		return
+	}
 }
 
 func TestValidStructContent(t *testing.T) {
@@ -135,6 +138,11 @@ func TestMain(t *testing.T) {
 	err := os.WriteFile(MOCK_JSON_FILE, []byte(MOCK_JSON_DATA), os.ModePerm)
 	if err != nil {
 		t.Error("could not create file 'test.json'")
+		return
+	}
+
+	if err := os.Remove(MOCK_JSON_FILE); err != nil {
+		t.Error("could not remove MOCK_JSON_FILE")
 		return
 	}
 

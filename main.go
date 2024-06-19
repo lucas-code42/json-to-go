@@ -60,10 +60,18 @@ func main() {
 	var jsonData map[string]interface{}
 	err = json.Unmarshal(jsonBytes, &jsonData)
 	if err != nil {
+		var jsonSliceData []map[string]interface{}
+		err := json.Unmarshal(jsonBytes, &jsonSliceData)
+		if err == nil {
+			jsonData = jsonSliceData[0]
+			goto process
+		}
+
 		log.Println("could not unmarshal, probably is not a valid json data")
 		os.Exit(1)
 	}
 
+process:
 	if err = writeGolangStruct(jsonData); err != nil {
 		log.Println("could not write golang struct")
 		os.Exit(1)

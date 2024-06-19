@@ -10,7 +10,7 @@ import (
 
 const (
 	MOCK_JSON_FILE string = "mock.json"
-	MOCK_JSON_DATA string = `{
+	MOCK_JSON_DATA string = `[{
 		"name": "json-to-struct",
 		"decimal": 2.0,
 		"boolean": false,
@@ -20,7 +20,7 @@ const (
 			}
 		],
 		"number": 10
-	}`
+	}]`
 )
 
 var MOCK_EXPECTED_STRUCT []string = []string{

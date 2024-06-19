@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"os"
 	"strings"
@@ -74,41 +73,15 @@ func TestReadJsonFile(t *testing.T) {
 }
 
 func TestValidStructContent(t *testing.T) {
+	os.Args = []string{"", MOCK_JSON_FILE}
+
 	err := os.WriteFile(MOCK_JSON_FILE, []byte(MOCK_JSON_DATA), os.ModePerm)
 	if err != nil {
 		t.Error("could not create file 'test.json'")
 		return
 	}
 
-	jsonBytes, err := readJsonFile(MOCK_JSON_FILE)
-	if err != nil {
-		t.Error("could not read MOCK_JSON_FILE")
-		return
-	}
-
-	if err := os.Remove(MOCK_JSON_FILE); err != nil {
-		t.Error("could not remove MOCK_JSON_FILE")
-		return
-	}
-
-	var jsonMap map[string]interface{}
-	err = json.Unmarshal(jsonBytes, &jsonMap)
-	if err != nil {
-		var jsonSliceData []map[string]interface{}
-		err := json.Unmarshal(jsonBytes, &jsonSliceData)
-		if err == nil {
-			jsonMap = jsonSliceData[0]
-			goto process
-		}
-		t.Error("could not unmarshal, probably is not a valid json data for test")
-		return
-	}
-
-process:
-	if err := writeGolangStruct(jsonMap); err != nil {
-		t.Errorf("Expected nil but got %v", err)
-		return
-	}
+	main()
 
 	if _, err := os.Stat(FILE_NAME); errors.Is(err, os.ErrNotExist) {
 		t.Errorf("Expected auto_generated.go but got %v", err)
@@ -118,11 +91,6 @@ process:
 	result, err := readJsonFile(FILE_NAME)
 	if err != nil {
 		t.Error("could not read FILE_NAME")
-		return
-	}
-
-	if err := os.Remove(FILE_NAME); err != nil {
-		t.Error("could not remove FILE_NAME")
 		return
 	}
 
@@ -138,6 +106,16 @@ process:
 		if !result {
 			t.Error("Expected struct content doesn't match")
 		}
+	}
+
+	if err := os.Remove(MOCK_JSON_FILE); err != nil {
+		t.Error("could not remove MOCK_JSON_FILE")
+		return
+	}
+
+	if err := os.Remove(FILE_NAME); err != nil {
+		t.Error("could not remove FILE_NAME")
+		return
 	}
 }
 

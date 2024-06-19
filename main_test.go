@@ -94,10 +94,17 @@ func TestValidStructContent(t *testing.T) {
 	var jsonMap map[string]interface{}
 	err = json.Unmarshal(jsonBytes, &jsonMap)
 	if err != nil {
+		var jsonSliceData []map[string]interface{}
+		err := json.Unmarshal(jsonBytes, &jsonSliceData)
+		if err == nil {
+			jsonMap = jsonSliceData[0]
+			goto process
+		}
 		t.Error("could not unmarshal, probably is not a valid json data for test")
 		return
 	}
 
+process:
 	if err := writeGolangStruct(jsonMap); err != nil {
 		t.Errorf("Expected nil but got %v", err)
 		return
